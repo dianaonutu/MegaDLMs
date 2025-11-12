@@ -1287,14 +1287,14 @@ def training_log(
                 if writer:
                     writer.add_scalar('throughput', throughput, iteration)
                 if wandb_writer:
-                    wandb_writer.log({'TFLOP-per-sec-per-GPU)': float(throughput)}, step=int(iteration))
+                    wandb_writer.log({'TFLOP-per-sec-per-GPU': float(throughput)}, step=int(iteration))
 
             log_string += f' throughput per GPU (Tokens/s/GPU): {tokens_per_s_per_gpu:.1f} |'
             if args.log_timers_to_tensorboard:
                 if writer:
                     writer.add_scalar('throughput per GPU (Tokens/s/GPU)', tokens_per_s_per_gpu, iteration)
                 if wandb_writer:
-                    wandb_writer.log({'tokens-per-sec-per-GPU)': float(tokens_per_s_per_gpu)}, step=int(iteration))
+                    wandb_writer.log({'tokens-per-sec-per-GPU': float(tokens_per_s_per_gpu)}, step=int(iteration))
 
         # Decoupled_learning_rate should be not None only on first and last pipeline stage.
         log_string += f' learning rate: {learning_rate:.6E} |'
