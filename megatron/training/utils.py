@@ -38,19 +38,28 @@ from megatron.core.utils import (
     get_data_parallel_group_if_dtensor,
     to_local_if_dtensor,
 )
-from megatron.legacy.model import Float16Module
 from megatron.legacy.model.module import param_is_not_shared
 from megatron.training import get_adlr_autoresume, get_args
 
-try:
-    from megatron.core.distributed import TorchFullyShardedDataParallel as torch_FSDP
+# Lazy initialization to avoid circular import
+ALL_MODULE_WRAPPER_CLASSNAMES = None
 
-    ALL_MODULE_WRAPPER_CLASSNAMES = (DDP, torch_FSDP, Float16Module)
-except ImportError:
-    ALL_MODULE_WRAPPER_CLASSNAMES = (DDP, Float16Module)
+def _get_module_wrapper_classnames():
+    """Lazy initialization of module wrapper classnames to avoid circular import."""
+    global ALL_MODULE_WRAPPER_CLASSNAMES
+    if ALL_MODULE_WRAPPER_CLASSNAMES is None:
+        from megatron.legacy.model import Float16Module
+        try:
+            from megatron.core.distributed import TorchFullyShardedDataParallel as torch_FSDP
+            ALL_MODULE_WRAPPER_CLASSNAMES = (DDP, torch_FSDP, Float16Module)
+        except ImportError:
+            ALL_MODULE_WRAPPER_CLASSNAMES = (DDP, Float16Module)
+    return ALL_MODULE_WRAPPER_CLASSNAMES
 
 
-def unwrap_model(model, module_instances=ALL_MODULE_WRAPPER_CLASSNAMES):
+def unwrap_model(model, module_instances=None):
+    if module_instances is None:
+        module_instances = _get_module_wrapper_classnames()
     return_list = True
     if not isinstance(model, list):
         model = [model]

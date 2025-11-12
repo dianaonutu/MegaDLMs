@@ -5,7 +5,7 @@
 import torch
 
 from megatron.core import tensor_parallel
-from megatron.legacy.model import LayerNorm
+from megatron.legacy.model.fused_layer_norm import MixedFusedLayerNorm as LayerNorm
 from megatron.legacy.model.enums import AttnMaskType
 from megatron.legacy.model.language_model import get_language_model, parallel_lm_logits
 from megatron.legacy.model.utils import get_linear_layer, openai_gelu

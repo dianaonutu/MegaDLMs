@@ -33,7 +33,6 @@ from megatron.core.utils import (
     get_model_config,
     is_float8tensor,
 )
-from megatron.legacy.model import Float16Module
 from megatron.training.checkpointing import checkpoint_exists, load_checkpoint, save_checkpoint
 
 try:
@@ -602,6 +601,8 @@ def get_model(model_provider_func, model_type=ModelType.encoder_or_decoder, wrap
 
     # Fp16 conversion.
     if args.fp16 or args.bf16:
+        # Lazy import to avoid circular dependency
+        from megatron.legacy.model import Float16Module
         model = [Float16Module(model_module, args) for model_module in model]
 
     # The model_module.bfloat16()/model_module.half() above will call the inplace copy of TE's

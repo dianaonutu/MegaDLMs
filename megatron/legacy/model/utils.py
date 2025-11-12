@@ -7,7 +7,8 @@ import math
 import torch
 
 from megatron.core.jit import jit_fuser
-from megatron.legacy.model import LayerNorm, RMSNorm
+from megatron.legacy.model.fused_layer_norm import MixedFusedLayerNorm as LayerNorm
+from megatron.legacy.model.rms_norm import RMSNorm
 from megatron.training import get_args
 
 

@@ -35,7 +35,6 @@ from megatron.core.utils import (
     get_model_config,
     is_float8tensor,
 )
-from megatron.legacy.model import Float16Module
 from megatron.training.checkpointing import checkpoint_exists, load_checkpoint, save_checkpoint
 
 try:
@@ -652,6 +651,8 @@ def get_model(model_provider_func, model_type=ModelType.encoder_or_decoder, wrap
 
     # Fp16 conversion.
     if args.fp16 or args.bf16:
+        # Lazy import to avoid circular dependency
+        from megatron.legacy.model import Float16Module
         model = [Float16Module(model_module, args) for model_module in model]
 
     # The model_module.bfloat16()/model_module.half() above will call the inplace copy of TE's
@@ -1262,13 +1263,16 @@ def training_log(
             elapsed_time_per_iteration * 10**12 * args.world_size
         )
 
+        tokens_per_step = args.seq_length * args.global_batch_size
+        tokens_per_s_per_gpu = tokens_per_step / (elapsed_time_per_iteration * args.world_size)
+        
         one_logger_utils.track_e2e_metrics(args.log_throughput, throughput)
 
         if args.log_timers_to_tensorboard:
             if writer:
                 writer.add_scalar('iteration-time', elapsed_time_per_iteration, iteration)
             if wandb_writer:
-                wandb_writer.log({'iteration-time': elapsed_time_per_iteration}, iteration)
+                wandb_writer.log({'iteration-time': float(elapsed_time_per_iteration)}, step=int(iteration))
         log_string = f" [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]"
         log_string += ' iteration {:8d}/{:8d} |'.format(iteration, args.train_iters)
         log_string += ' consumed samples: {:12d} |'.format(args.consumed_train_samples)
@@ -1283,7 +1287,15 @@ def training_log(
                 if writer:
                     writer.add_scalar('throughput', throughput, iteration)
                 if wandb_writer:
-                    wandb_writer.log({'throughput': throughput}, iteration)
+                    wandb_writer.log({'TFLOP-per-sec-per-GPU)': float(throughput)}, step=int(iteration))
+
+            log_string += f' throughput per GPU (Tokens/s/GPU): {tokens_per_s_per_gpu:.1f} |'
+            if args.log_timers_to_tensorboard:
+                if writer:
+                    writer.add_scalar('throughput per GPU (Tokens/s/GPU)', tokens_per_s_per_gpu, iteration)
+                if wandb_writer:
+                    wandb_writer.log({'tokens-per-sec-per-GPU)': float(tokens_per_s_per_gpu)}, step=int(iteration))
+
         # Decoupled_learning_rate should be not None only on first and last pipeline stage.
         log_string += f' learning rate: {learning_rate:.6E} |'
         if args.decoupled_lr is not None and (
