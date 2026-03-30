@@ -1,11 +1,11 @@
 <div align="center">
 
-MegaDLMs (Preview)
+MegaDLMs
 ===========================
 
 <h4>GPU-optimized framework for training diffusion language models at any scale.</h4>
 
-[![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](https://docs.nvidia.com/Megatron-Core/developer-guide/latest/index.html)
+[![Documentation](https://img.shields.io/badge/docs-interactive-brightgreen.svg?style=flat)](https://deepwiki.com/JinjieNi/MegaDLMs)
 [![version](https://img.shields.io/badge/release-0.0.1-green)](./CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-Apache-blue)](./LICENSE)
 
@@ -71,7 +71,7 @@ Setup the environment variables as instructed in `envs/.env`.
 
 # Project Structure
 
-MegaDLMs is built upon [Megatron-LM](https://github.com/NVIDIA/Megatron-LM/tree/main).
+We also built an [interactive doc](https://deepwiki.com/JinjieNi/MegaDLMs) with DeepWiki to help you better understand this repo.
 
 ```
 mega-dlms/
@@ -391,8 +391,9 @@ We provide an apple-to-apple speedrun against [Open-dLLM](https://github.com/pen
 
 # Related Links
 
-- Our backend: [Megatron-LM](https://github.com/NVIDIA/Megatron-LM) and [Transformer Engine](https://github.com/NVIDIA/TransformerEngine).
 - MegaDLMs is the training backend for [Quokka](https://github.com/JinjieNi/Quokka), [Super Data Learners](https://github.com/JinjieNi/dlms-are-super-data-learners), and [OpenMoE 2](https://github.com/JinjieNi/OpenMoE2).
+- [Megatron-LM](https://github.com/NVIDIA/Megatron-LM), [Transformer Engine](https://github.com/NVIDIA/TransformerEngine).
+- [LMMs-Engine](https://github.com/EvolvingLMMs-Lab/lmms-engine) is a simple, unified multimodal models training engine, which will also support unified DLMs in the future.
 
 
 <br>
@@ -406,5 +407,33 @@ We provide an apple-to-apple speedrun against [Open-dLLM](https://github.com/pen
   author={Ni, Jinjie},
   year={2025}
   howpublished={\url{https://github.com/JinjieNi/MegaDLMs}},
+}
+```
+
+```bibtex
+@article{ni2025superdatalearner,
+  title={Diffusion Language Models are Super Data Learners},
+  author={Ni, Jinjie and Liu, Qian and Dou, Longxu and Du, Chao and Wang, Zili and Yan, Hang and Pang, Tianyu and Shieh, Michael Qizhe},
+  journal={arXiv preprint arXiv:2511.03276},
+  year={2025}
+}
+```
+
+```bibtex
+@article{ni2025training,
+  title={Training Optimal Large Diffusion Language Models},
+  author={Ni, Jinjie and Liu, Qian and Du, Chao and Dou, Longxu and Yan, Hang and Wang, Zili and Pang, Tianyu and Shieh, Michael Qizhe},
+  journal={arXiv preprint arXiv:2510.03280},
+  year={2025}
+}
+```
+
+```bibtex
+@misc{ni2025openmoe2,
+title={OpenMoE 2: Sparse Diffusion Language Models},
+author={Ni, Jinjie and team},
+year={2025},
+howpublished={\url{https://jinjieni.notion.site/OpenMoE-2-Sparse-Diffusion-Language-Models-277d8f03a8668065a4ecd23f23bd6aac}},
+note={Notion Blog},
 }
 ```
